@@ -11,19 +11,17 @@ class _DashBordPageTwoState extends State<DashBordPageTwo> {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       child: SingleChildScrollView(
         child: Container(
           child: Column(
             children: <Widget>[
-
               Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Dashbord_Card(
                       SVGPath: 'images/money.svg',
-                      text: 'Chada',
+                      text: 'Guarantor',
                     ),
                     Dashbord_Card(
                       SVGPath: 'images/money.svg',

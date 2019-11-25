@@ -8,18 +8,26 @@ import 'package:toast/toast.dart';
 import '../../Helper/ensure_visible.dart';
 import '../../component/LoginButton.dart';
 import 'dart:io';
-import '../../Logic/API/LoginAPI.dart';
-import 'package:http/http.dart';
-import 'Sign_up_UI.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../Logic/API/SIgnUP_API.dart';
+import 'Login_UI.dart';
 
-class Login_UI extends StatefulWidget {
+class Sign_up_UI extends StatefulWidget {
   @override
-  _Login_UIState createState() => _Login_UIState();
+  _Sign_up_UIState createState() => _Sign_up_UIState();
 }
 
-class _Login_UIState extends State<Login_UI> {
-  final storage = new FlutterSecureStorage();
+class _Sign_up_UIState extends State<Sign_up_UI> {
+  final FocusNode _EmailFocus = FocusNode();
+  final FocusNode _PasswordFocus = FocusNode();
+  static final TextEditingController _firstNameController =
+      new TextEditingController();
+  static final TextEditingController _lastNameController =
+      new TextEditingController();
+
+  final EmailKey = GlobalKey<FormState>();
+  final PasswordKey = GlobalKey<FormState>();
+  String _email, _password;
+
   bool visiable = false;
 
   Future<bool> _onWillPop(message) {
@@ -45,58 +53,42 @@ class _Login_UIState extends State<Login_UI> {
         ) ??
         false;
   }
+
   void ChangeVisiable(bool b) {
     setState(() {
       visiable = b;
     });
   }
 
-  final FocusNode _EmailFocus = FocusNode();
-  final FocusNode _PasswordFocus = FocusNode();
-  static final TextEditingController _firstNameController =
-      new TextEditingController();
-  static final TextEditingController _lastNameController =
-      new TextEditingController();
-
-  final EmailKey = GlobalKey<FormState>();
-  final PasswordKey = GlobalKey<FormState>();
-  String _email, _password;
-
-
-
   void _submit() async {
     ChangeVisiable(true);
+
     if (EmailKey.currentState.validate()) {
       EmailKey.currentState.save();
       if (_email != null && _password != null) {
-        LoginApi login = new LoginApi();
-        var responce = await login.Login_Request(_email, _password);
+        SignUP_API SignUP = new SignUP_API();
+        var responce = await SignUP.SignUP_Request(_email, _password);
         print('=============================');
-        print("test     = = = = = = = =");
+        print("test   Sign UP  = = = = = = = =");
         print(responce);
         if (responce != null) {
           if (responce['access_token'] != null) {
-            String UserToken = responce['access_token'];
-            String member_Id = responce['member_id'];
-            await storage.write(key: 'UserToken', value: UserToken);
-            await storage.write(key: 'member_id', value: member_Id);
             ChangeVisiable(false);
-
             var temp = await Navigator.push(
-                context, MaterialPageRoute(builder: (context) => DashBoard()));
+              context,
+              MaterialPageRoute(
+                builder: (context) => Login_UI(),
+              ),
+            );
             if (temp == null) {
               exit(0);
             }
           } else {
             ChangeVisiable(false);
             bool b = await _onWillPop(responce['message'].toString());
-
-            Toast.show(responce['message'], context,
+            Toast.show(responce['message']['member_id'][0].toString(), context,
                 duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
           }
-        } else {
-          ChangeVisiable(false);
-          bool b = await _onWillPop("Connection Error.");
         }
       } else {
         ChangeVisiable(false);
@@ -123,16 +115,11 @@ class _Login_UIState extends State<Login_UI> {
     }
   }
 
-  void Storage_clearA() async {
-    await storage.deleteAll();
-  }
-
   @override
   void initState() {
     // TODO: implement initState
     _PasswordFocus.addListener(_focusNodeListener);
     _EmailFocus.addListener(_focusNodeListener);
-    Storage_clearA();
     super.initState();
   }
 
@@ -147,7 +134,6 @@ class _Login_UIState extends State<Login_UI> {
   Widget build(BuildContext context) {
     var Sk_hight = MediaQuery.of(context).size.height;
     var Sk_width = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: login_UI_BacgroundColor,
       body: SafeArea(
@@ -201,7 +187,7 @@ class _Login_UIState extends State<Login_UI> {
                                         FocusScope.of(context)
                                             .requestFocus(_PasswordFocus);
                                       },
-                                      hint: 'Username',
+                                      hint: 'member_id',
                                       inputType: TextInputType.emailAddress,
                                       validator: (input) => input.length < 1
                                           ? 'Not a valid Email'
@@ -222,7 +208,7 @@ class _Login_UIState extends State<Login_UI> {
                                   child: EnsureVisibleWhenFocused(
                                     child: new PasswordTextField(
                                       focusNode: _PasswordFocus,
-                                      hint: 'Password',
+                                      hint: 'member_name',
                                       validator: (input) => input.length < 4
                                           ? 'You need at least 4 characters'
                                           : null,
@@ -237,7 +223,7 @@ class _Login_UIState extends State<Login_UI> {
                           height: 10,
                         ),
                         LoginButton(
-                          text: "SIGN IN",
+                          text: "SIGN UP",
                           onPress: () {
                             _submit();
 
@@ -250,14 +236,9 @@ class _Login_UIState extends State<Login_UI> {
                         Container(
                           child: Center(
                             child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Sign_up_UI()));
-                              },
+                              onTap: () => Navigator.pop(context, false),
                               child: Text(
-                                "SIGN UP",
+                                "SIGN IN",
                                 style: KRedFlatButtonStyle,
                               ),
                             ),

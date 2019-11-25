@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shomity_app/AppScreen/Chanda/Chada_UI.dart';
 import '../../component/DashBord_Card.dart';
 import '../../Service/networking.dart';
 import 'package:http/http.dart';
@@ -6,6 +7,7 @@ import 'dart:convert';
 import '../Munafa/Munafa_UI.dart';
 import '../Events/Events_UI.dart';
 import '../AllMembers/AllMembers_UI.dart';
+import '../Personal_File/personal_file_UI.dart';
 
 class DashBordPageOne extends StatefulWidget {
   @override
@@ -27,30 +29,32 @@ class _DashBordPageOneState extends State<DashBordPageOne> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Dashbord_Card(
-                      SVGPath: 'images/money.svg',
-                      text: 'Munafa',
+                      SVGPath: 'images/bank.svg',
+                      text: 'Chada',
                       function: () async {
                         try {
-                          print("request sent");
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Munafa_UI()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Chada_UI(),
+                            ),
+                          );
                         } catch (e) {
                           print(e.toString());
                         }
                       },
                     ),
                     Dashbord_Card(
-                      SVGPath: 'images/community.svg',
-                      text: 'All Member',
+                      SVGPath: 'images/man.svg',
+                      text: 'Personal File',
                       function: () async {
                         try {
-                          print("request sent");
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AllMembers_UI()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => personal_file_ui(),
+                            ),
+                          );
                         } catch (e) {
                           print(e.toString());
                         }
@@ -83,8 +87,19 @@ class _DashBordPageOneState extends State<DashBordPageOne> {
                       },
                     ),
                     Dashbord_Card(
-                      SVGPath: 'images/man.svg',
-                      text: 'Personal File',
+                      SVGPath: 'images/community.svg',
+                      text: 'All Member',
+                      function: () async {
+                        try {
+                          print("request sent");
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AllMembers_UI()));
+                        } catch (e) {
+                          print(e.toString());
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -98,10 +113,21 @@ class _DashBordPageOneState extends State<DashBordPageOne> {
                   children: <Widget>[
                     Dashbord_Card(
                       SVGPath: 'images/money.svg',
-                      text: 'Guarantor',
+                      text: 'Munafa',
+                      function: () async {
+                        try {
+                          print("request sent");
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Munafa_UI()));
+                        } catch (e) {
+                          print(e.toString());
+                        }
+                      },
                     ),
                     Dashbord_Card(
-                      SVGPath: 'images/money.svg',
+                      SVGPath: 'images/notification.svg',
                       text: 'Notification',
                     ),
                   ],

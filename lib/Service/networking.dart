@@ -11,6 +11,8 @@ class NetworkHelper {
 
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body);
+      print("Network helper");
+      print(response.statusCode);
       print(decodedData.toString());
       return decodedData;
     } else {

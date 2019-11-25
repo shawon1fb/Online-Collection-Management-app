@@ -25,11 +25,19 @@ class _AllMembers_UIState extends State<AllMembers_UI> {
       var data = await nt.getData();
       print(data.toString() + "printed");
 
+      List<dynamic> lst = data['data']['data'];
+
+      int cnt = 0;
       setState(() {
         try {
-          for (var i in data['data']) {
-            print(i['member_name']);
-            GEtMemberList.add(
+          print(lst.length);
+          print(lst[19]['member_name']);
+          print("===============");
+          for (var i in lst) {
+            print("i = " + cnt.toString());
+            cnt++;
+            print(i['member_name'].toString());
+            MemberList.add(
               new MemberDetails(
                 Member_Name: i['member_name'],
                 Member_ID: i['member_id'],
@@ -37,9 +45,10 @@ class _AllMembers_UIState extends State<AllMembers_UI> {
             );
           }
 
-          fatch_five();
+          // fatch_five();
           isvisable = false;
         } catch (e) {
+          print("============= All memeber execption ++++++++++++");
           print(e.toString());
         }
       });
@@ -50,26 +59,27 @@ class _AllMembers_UIState extends State<AllMembers_UI> {
 
   int flag = 0;
 
-  void fatch_five() {
-    for (int i = 0; i < 15; i++) {
+  /*void fatch_five() {
+    for (int i = 0; i < 10; i++) {
       setState(() {
         MemberList.add(GEtMemberList[flag + i]);
         flag++;
       });
     }
-  }
+  }*/
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     FatchData();
-    _scrollController.addListener(() {
+    /* _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         fatch_five();
+        print("ok");
       }
-    });
+    });*/
   }
 
   @override
@@ -93,7 +103,7 @@ class _AllMembers_UIState extends State<AllMembers_UI> {
             visible: !isvisable,
             child: Container(
               child: ListView.builder(
-                  controller: _scrollController,
+                  //controller: _scrollController,
                   itemCount: MemberList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
@@ -104,11 +114,17 @@ class _AllMembers_UIState extends State<AllMembers_UI> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text('Name: ${MemberList[index].Member_Name}'),
+                            Text(
+                              'Name: ${MemberList[index].Member_Name}',
+                              style: KUserName.copyWith(color: Colors.green),
+                            ),
                             SizedBox(
                               height: 10,
                             ),
-                            Text('Member ID: ${MemberList[index].Member_ID}'),
+                            Text(
+                              'Member ID: ${MemberList[index].Member_ID}',
+                              style: KUserName.copyWith(color: Colors.green),
+                            ),
                             SizedBox(
                               height: 10,
                             ),
